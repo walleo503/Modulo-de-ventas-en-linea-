@@ -8,13 +8,24 @@ CREATE TABLE Usuario (
     telefono VARCHAR(200),
     direccion VARCHAR(200),
     ubicacionId INT,
+	loginid INT
     FOREIGN KEY (ubicacionId) REFERENCES Ubicacion(ubicacionId)
+);
+-- Tabla Login_Usuario con el campo correo
+CREATE TABLE Login_Usuario (
+    loginid INT PRIMARY KEY IDENTITY(1,1),
+    usuarioId INT UNIQUE,  
+    correo VARCHAR(200) UNIQUE NOT NULL,
+    contraseña VARCHAR(200) NOT NULL,
+    FOREIGN KEY (usuarioId) REFERENCES Usuario(usuarioId) -- Clave foránea hacia Usuario
 );
 
 -- Tabla Ubicacion
 CREATE TABLE Ubicacion (
     ubicacionId INT PRIMARY KEY IDENTITY(1,1),
-    departamento VARCHAR(200)
+    departamento VARCHAR(200),
+	latitud DECIMAL(10,6),
+    longitud DECIMAL(10,6)
 );
 
 -- Tabla Pedido
@@ -23,7 +34,7 @@ CREATE TABLE Pedido (
     fecha DATETIME, 
     nombre VARCHAR(200),
     cantidad INT,
-    precio DECIMAL(10,2),  -- Se añadió precisión
+    precio DECIMAL(10,2), 
     reciboId INT,
     FOREIGN KEY (reciboId) REFERENCES Recibo(reciboId)
 );
@@ -47,7 +58,7 @@ CREATE TABLE Historial (
 CREATE TABLE Ventas_linea (
     venta_lineaId INT PRIMARY KEY IDENTITY(1,1),
     usuarioId INT,
-    menuId INT,
+    id_plato INT,
     pedidoId INT,
     estado VARCHAR(300),
     historialId INT,
