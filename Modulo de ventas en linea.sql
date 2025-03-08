@@ -58,14 +58,39 @@ CREATE TABLE Historial (
     FOREIGN KEY (reciboId) REFERENCES Recibo(reciboId)
 );
 
--- Tabla Menu (Relacionada con Pedido, Platos y Promociones)
+-- Tabla Platos
+CREATE TABLE Platos (
+    id INT PRIMARY KEY,
+    nombre VARCHAR(200),
+    descripcion TEXT,
+    precio DECIMAL(10,2)
+);
+
+-- Tabla Promociones
+CREATE TABLE Promociones (
+    id INT PRIMARY KEY,
+    descripcion TEXT,
+    descuento DECIMAL(5,2)
+);
+
+-- Nueva Tabla de Combos
+CREATE TABLE Combos (
+    id_combo INT PRIMARY KEY,
+    nombre VARCHAR(200),
+    descripcion TEXT,
+    precio DECIMAL(10,2)
+);
+
+-- Tabla Menu (Ahora incluye los Combos)
 CREATE TABLE Menu (
     id_menu INT PRIMARY KEY,
-    id_plato INT,
-    id_promocion INT,
+    id_plato INT NULL,
+    id_promocion INT NULL,
+    id_combo INT NULL,
     pedidoId INT,
     FOREIGN KEY (id_plato) REFERENCES Platos(id),
     FOREIGN KEY (id_promocion) REFERENCES Promociones(id),
+    FOREIGN KEY (id_combo) REFERENCES Combos(id_combo),
     FOREIGN KEY (pedidoId) REFERENCES Pedido(pedidoId)
 );
 
@@ -81,3 +106,4 @@ CREATE TABLE Ventas_linea (
     FOREIGN KEY (pedidoId) REFERENCES Pedido(pedidoId),
     FOREIGN KEY (historialId) REFERENCES Historial(historialId)
 );
+
