@@ -1,3 +1,4 @@
+ 
 CREATE DATABASE restaurante;
 GO
 USE restaurante;
@@ -193,6 +194,7 @@ CREATE SEQUENCE seq_factura_local
 -- Tabla Login_Cliente (Antes era Login_Usuario)
 CREATE TABLE Login_Cliente (
 	loginid INT PRIMARY KEY NOT NULL,
+	correo VARCHAR(200) UNIQUE NOT NULL,
 	contraseña VARCHAR(200) NOT NULL
 );
 
@@ -201,7 +203,6 @@ CREATE TABLE Cliente (
 	clienteId INT PRIMARY KEY,
 	nombre VARCHAR(200) NOT NULL,
 	telefono VARCHAR(200) NOT NULL,
-	correo VARCHAR(200) UNIQUE NOT NULL,
 	direccion VARCHAR(200) NOT NULL,
 	latitud DECIMAL(10,6) NOT NULL,
 	longitud DECIMAL(10,6) NOT NULL,
@@ -219,9 +220,8 @@ CREATE TABLE Pedido_Online (
 );
 
 --Tabla Ventas_linea
-CREATE TABLE Ventas_linea (
+CREATE TABLE carrito (
     venta_lineaId INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
-    clienteId INT NOT NULL,
     pedido_id INT NOT NULL,
     plato_id INT NULL,
     combo_id INT NULL,
@@ -230,10 +230,21 @@ CREATE TABLE Ventas_linea (
     metodo_pago_id INT NOT NULL,
     estado VARCHAR(20) CHECK (estado IN ('Pendiente','Cancelado')) NOT NULL DEFAULT 'Pendiente',
     fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (clienteId) REFERENCES Cliente(clienteId),
     FOREIGN KEY (pedido_id) REFERENCES Pedido_Online(id_pedido),
     FOREIGN KEY (plato_id) REFERENCES Platos(id),
     FOREIGN KEY (combo_id) REFERENCES Combos(id),
     FOREIGN KEY (metodo_pago_id) REFERENCES MetodoPago(metodo_pago_id),
     CHECK ((plato_id IS NOT NULL AND combo_id IS NULL) OR (plato_id IS NULL AND combo_id IS NOT NULL))
+);
+
+--Pedido en linea
+create table pedidos_en_linea(
+pedido_id  int primary key,
+tipoItem varchar(50),
+itemId int,
+cantidad int ,
+   estado VARCHAR(20) CHECK (estado IN ('Pendiente','Cancelado')) NOT NULL DEFAULT 'Pendiente',
+    fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (pedido_id) REFERENCES Pedido_Online(id_pedido),
+
 );
