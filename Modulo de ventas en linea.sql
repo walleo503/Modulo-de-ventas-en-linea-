@@ -213,10 +213,17 @@ CREATE TABLE Cliente (
 --Tabla Pedido_online
 CREATE TABLE Pedido_Online (
     id_pedido INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-    id_cliente INT NOT NULL,
-    fecha_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado VARCHAR(20) CHECK(estado IN ('Pendiente','Cancelado')) NOT NULL DEFAULT 'Pendiente',
-    FOREIGN KEY (id_cliente) REFERENCES Cliente(clienteId)
+	encabezado_id INT NOT NULL,
+	tipo_Item varchar(10) CHECK(tipo_Item in ('Plato', 'Combo')) NOT NULL,
+	plato_id INT NOT NULL,
+	cantidad INT NOT NULL,
+	comentarios VARCHAR(100) NULL,
+	total decimal (10,2) not null, 
+	estado varchar(20) CHECK(estado in ( 'En Proceso', 'Cancelado')) NOT NULL
+	DEFAULT 'Pendiente',
+	subtotal DECIMAL(10,2) NOT NULL,
+	FOREIGN KEY (encabezado_id) REFERENCES Pedido_Local(id_pedido) ON
+	DELETE CASCADE
 );
 
 --Tabla Ventas_linea
@@ -224,7 +231,6 @@ CREATE TABLE carrito (
     venta_lineaId INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     pedido_id INT NOT NULL,
     plato_id INT NULL,
-    combo_id INT NULL,
     cantidad INT NOT NULL,
     total DECIMAL(10,2) NOT NULL,
     metodo_pago_id INT NOT NULL,
@@ -232,7 +238,6 @@ CREATE TABLE carrito (
     fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pedido_id) REFERENCES Pedido_Online(id_pedido),
     FOREIGN KEY (plato_id) REFERENCES Platos(id),
-    FOREIGN KEY (combo_id) REFERENCES Combos(id),
     FOREIGN KEY (metodo_pago_id) REFERENCES MetodoPago(metodo_pago_id),
     CHECK ((plato_id IS NOT NULL AND combo_id IS NULL) OR (plato_id IS NULL AND combo_id IS NOT NULL))
 );
@@ -241,16 +246,17 @@ CREATE TABLE carrito (
 create table historial_pedido(
 historial_id  int primary key,
 tipoItem varchar(50),
-itemId int,
+palto_id int,
 cantidad int ,
-estado VARCHAR(20) CHECK (estado IN ('Pendiente','Cancelado')) NOT NULL DEFAULT 'Pendiente',
+estado VARCHAR(20) CHECK (estado IN ('Pendiente','Cancelado')) NOT NULL DEFAULT 'Cancelado',
  fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (historial_id) REFERENCES Pedido_Online(id_pedido),
+  total decimal 
 );
 
 create table ventas_en_linea (
   ventas_linea_id int primary key,
-  menu_id int not null,
+  plato_id int not null,
   cliente_id int not null,
   carrito_id int not null,
   pedido__id int not null,
