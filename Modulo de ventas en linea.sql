@@ -1,4 +1,3 @@
- 
 CREATE DATABASE restaurante;
 GO
 USE restaurante;
@@ -190,6 +189,7 @@ CREATE SEQUENCE seq_factura_local
     START WITH 1
     INCREMENT BY 1;
 
+	--------------------------------------------------------------------
 
 -- Tabla Login_Cliente (Antes era Login_Usuario)
 CREATE TABLE Login_Cliente (
@@ -238,13 +238,21 @@ CREATE TABLE carrito (
 );
 
 --Pedido en linea
-create table pedidos_en_linea(
-pedido_id  int primary key,
+create table historial_pedido(
+historial_id  int primary key,
 tipoItem varchar(50),
 itemId int,
 cantidad int ,
-   estado VARCHAR(20) CHECK (estado IN ('Pendiente','Cancelado')) NOT NULL DEFAULT 'Pendiente',
-    fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (pedido_id) REFERENCES Pedido_Online(id_pedido),
+estado VARCHAR(20) CHECK (estado IN ('Pendiente','Cancelado')) NOT NULL DEFAULT 'Pendiente',
+ fecha_venta DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (historial_id) REFERENCES Pedido_Online(id_pedido),
+);
 
+create table ventas_en_linea (
+  ventas_linea_id int primary key,
+  menu_id int not null,
+  cliente_id int not null,
+  carrito_id int not null,
+  pedido__id int not null,
+  historial_id int not null
 );
